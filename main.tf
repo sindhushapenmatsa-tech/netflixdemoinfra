@@ -1,13 +1,13 @@
 provider "aws" {
-  region = "us-north-1"
+  region = "us-east-1"
 }
 
 resource "aws_instance" "one" {
   count                  = 3
-  ami                    = "ami-0aba19e56f3eaec05"
+  ami                    = "ami-0b6d9d3d33ba97d99"
   instance_type          = "c7i-flex.large"
-  key_name               = "sindhu-key-new"
-  vpc_security_group_ids = ["sg-0ea59f073476fbb92"]
+  key_name               = "netflix-jenkins"
+  vpc_security_group_ids = ["sg-0b653afa3f6211d54"]
   tags = {
     Name = var.instance_names[count.index]
   }
@@ -19,7 +19,12 @@ variable "instance_names" {
 
 resource "aws_s3_bucket" "one" {
   bucket = "my-project-bucket-jenkins-netflix-1234"
-  versioning {
-    enabled = true
+}
+
+resource "aws_s3_bucket_versioning" "one" {
+  bucket = aws_s3_bucket.one.id
+
+  versioning_configuration {
+    status = "Enabled"
   }
 }
